@@ -1,2 +1,5 @@
 config/__pycache__/
 utils/__pycache__/
+env/
+resources/.env
+tests/__pycache__/
