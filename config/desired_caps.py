@@ -6,7 +6,7 @@ deviceInfo = get_device_info()
 deviceName, platformOS = deviceInfo
 
 # Path to the mobile application (APK file) to be tested.
-appPath = r"C:\Users\Admin\Desktop\Automation-Projects\Mobile-Automation\apk\microsoft-teams-1416-1-0-0-2024183604.apk"
+appPath = r"C:\Users\Admin\Desktop\Automation-Projects\Mobile-App-Automation\apk\microsoft-teams-1416-1-0-0-2024183604.apk"
 
 def get_desired_capabilities():
     """

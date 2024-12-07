@@ -15,12 +15,12 @@ from selenium.common.exceptions import TimeoutException
 from dotenv import load_dotenv
 
 # Specify the location of the .resx resource file containing locator information
-resource_location = r'C:\Users\Admin\Desktop\Automation-Projects\Mobile-Automation\resources\login_test_locators.resx'
+resource_location = r'C:\Users\Admin\Desktop\Automation-Projects\Mobile-App-Automation\resources\login_test_locators.resx'
 # Create an instance of the ResxReader to read locators from the resource file
 resx_reader_instance = ResxReader(resource_location)
 
 # Load environment variables from the .env file for test credentials
-load_dotenv(r"C:\Users\Admin\Desktop\Automation-Projects\Mobile-Automation\resources\.env")
+load_dotenv(r"C:\Users\Admin\Desktop\Automation-Projects\Mobile-App-Automation\resources\.env")
 test_username = os.getenv("TEST_EMAIL")  # Get the test email from the environment variables
 test_password = os.getenv("TEST_PASS")   # Get the test password from the environment variables
 
