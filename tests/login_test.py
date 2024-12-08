@@ -152,7 +152,7 @@ def test_login(driver):
         gotItButton_element.click()  # Click the 'Got It' button again
 
         try:
-            # Step 17: Click 'OK' button again if needed
+            # Step 15: Click 'OK' button again if needed
             okButton_locator = resx_reader_instance.get_locator(key="ok")
             okButton_element = WebDriverWait(driver, 10).until(
                 EC.element_to_be_clickable((By.XPATH, okButton_locator))
@@ -161,14 +161,14 @@ def test_login(driver):
         except:
             pass
 
-        # Step 15: Click 'Not Now' button if present
+        # Step 16: Click 'Not Now' button if present
         notNow_locator = resx_reader_instance.get_locator(key="notNow")
         notNow_element = WebDriverWait(driver, 10).until(
             EC.element_to_be_clickable((By.XPATH, notNow_locator))
         )
         notNow_element.click()  # Click the 'Not Now' button
 
-        # Step 16: Click 'Cancel' button again if needed
+        # Step 17: Click 'Cancel' button again if needed
         cancelButton_locator = resx_reader_instance.get_locator(key="cancelButton")
         cancelButton_element = WebDriverWait(driver, 10).until(
             EC.element_to_be_clickable((By.XPATH, cancelButton_locator))
