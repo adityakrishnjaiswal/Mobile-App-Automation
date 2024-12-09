@@ -3,10 +3,17 @@ from appium.options.common.base import AppiumOptions
 
 # Retrieve device information (device name and platform OS version) from the configuration.
 deviceInfo = get_device_info()
-deviceName, platformOS = deviceInfo
+if deviceInfo == None:
+    deviceName = "Samsung S23"
+    platformOS = "14"
+    
+else:
+    deviceName, platformOS = deviceInfo
 
 # Path to the mobile application (APK file) to be tested.
+
 appPath = r"C:\Users\Admin\Desktop\Automation-Projects\Mobile-App-Automation\apk\microsoft-teams-1416-1-0-0-2024183604.apk"
+
 
 def get_desired_capabilities():
     """
