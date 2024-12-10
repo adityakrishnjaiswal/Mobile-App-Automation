@@ -1,19 +1,25 @@
 from config.device_info import get_device_info
 from appium.options.common.base import AppiumOptions
+import os
+from dotenv import load_dotenv
+
+load_dotenv(r"C:\Users\Admin\Desktop\Automation-Projects\Mobile-App-Automation\resources\.env")
 
 # Retrieve device information (device name and platform OS version) from the configuration.
 deviceInfo = get_device_info()
 if deviceInfo == None:
-    deviceName = "Samsung S23"
-    platformOS = "14"
-    
+    deviceName = "Samsung Galaxy S23"
+    platformOS = "14.0"
+    appPath = os.getenv("APP_URL")
+    bsUser = os.getenv("BS_USER")
+    bsKey = os.getenv("BS_KEY")
+    server_url = f"http://{bsUser}:{bsKey}@hub-cloud.browserstack.com/wd/hub"
 else:
     deviceName, platformOS = deviceInfo
 
-# Path to the mobile application (APK file) to be tested.
-
-appPath = r"C:\Users\Admin\Desktop\Automation-Projects\Mobile-App-Automation\apk\microsoft-teams-1416-1-0-0-2024183604.apk"
-
+    # Path to the mobile application (APK file) to be tested.
+    appPath = r"C:\Users\Admin\Desktop\Automation-Projects\Mobile-App-Automation\apk\microsoft-teams-1416-1-0-0-2024183604.apk"
+    server_url = "http://localhost:4723"
 
 def get_desired_capabilities():
     """
@@ -42,4 +48,4 @@ def get_desired_capabilities():
         "appium:autoGrantPermissions": True  # Automatically grant app permissions during installation.
     })
 
-    return options
+    return options, server_url

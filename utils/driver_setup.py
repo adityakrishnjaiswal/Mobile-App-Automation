@@ -11,8 +11,8 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from config.desired_caps import get_desired_capabilities
 
 # Define the Appium server URL
-server_url = "http://localhost:4723"
 
+caps,server_url = get_desired_capabilities()
 # Configure the Appium client connection
 # This ensures that the connection setup uses the latest recommended Appium client configuration
 client_config = ClientConfig(remote_server_addr=server_url)
@@ -30,8 +30,7 @@ def initialize_driver():
     3. Returns the initialized driver instance for use in tests.
     """
     # Retrieve desired capabilities
-    desired_caps = get_desired_capabilities()
-
+    desired_caps = caps
     # Initialize the driver using the updated command_executor and desired capabilities
     driver = webdriver.Remote(command_executor=command_executor, options=desired_caps)
     return driver
