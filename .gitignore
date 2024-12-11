@@ -4,3 +4,4 @@ env/
 resources/.env
 tests/__pycache__/
 apk/
+reports/

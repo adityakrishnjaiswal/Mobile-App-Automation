@@ -8,7 +8,7 @@ load_dotenv(r"C:\Users\Admin\Desktop\Automation-Projects\Mobile-App-Automation\r
 # Retrieve device information (device name and platform OS version) from the configuration.
 deviceInfo = get_device_info()
 if deviceInfo == None:
-    deviceName = "Samsung Galaxy S23"
+    deviceName = "Samsung Galaxy S24"
     platformOS = "14.0"
     appPath = os.getenv("APP_URL")
     bsUser = os.getenv("BS_USER")
