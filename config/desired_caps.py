@@ -13,12 +13,12 @@ if deviceInfo == None:
     appPath = os.getenv("APP_URL")
     bsUser = os.getenv("BS_USER")
     bsKey = os.getenv("BS_KEY")
-    server_url = f"http://{bsUser}:{bsKey}@hub-cloud.browserstack.com/wd/hub"
+    server_url = f"http://hub-cloud.browserstack.com/wd/hub"
 else:
     deviceName, platformOS = deviceInfo
 
     # Path to the mobile application (APK file) to be tested.
-    appPath = r"C:\Users\Admin\Desktop\Automation-Projects\Mobile-App-Automation\apk\microsoft-teams-1416-1-0-0-2024183604.apk"
+    appPath = r"C:\Users\Admin\Desktop\Automation-Projects\Mobile-App-Automation\apk\Teams-Test.apk"
     server_url = "http://localhost:4723"
 
 def get_desired_capabilities():
@@ -45,7 +45,9 @@ def get_desired_capabilities():
         "appium:noReset": False,  # Ensure the app state is reset before the session.
         "appium:platformVersion": platformOS,  # Version of the Android platform on the device.
         "appium:disableIdLocatorAutocompletion": True,  # Disable automatic ID locator completion.
-        "appium:autoGrantPermissions": True  # Automatically grant app permissions during installation.
+        "appium:autoGrantPermissions": True,  # Automatically grant app permissions during installation.
+        "appium:interactiveDebugging":True,
+        "appium:video":True
     })
 
-    return options, server_url
+    return options, server_url, bsUser, bsKey

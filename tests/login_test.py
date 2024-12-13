@@ -6,12 +6,13 @@ from selenium.common.exceptions import TimeoutException, WebDriverException
 # Add the project root to the Python path for module imports
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
+# Import the required functions and classes
 from utils.driver_setup import initialize_driver
+from utils.log_status import update_log
 from utils.resource_reader import ResxReader
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
-from selenium.common.exceptions import TimeoutException
 from dotenv import load_dotenv
 
 # Specify the location of the .resx resource file containing locator information
@@ -57,11 +58,14 @@ def test_login(driver):
 
         # Step 3: Deny Permissions if prompted
         # Locate the "Deny" element and wait for it to be clickable
-        deny_locator = resx_reader_instance.get_locator(key="deny")
-        deny_element = WebDriverWait(driver, 10).until(
-            EC.element_to_be_clickable((By.XPATH, deny_locator))
-        )
-        deny_element.click()  # Click the 'Deny' button
+        try:
+            deny_locator = resx_reader_instance.get_locator(key="deny")
+            deny_element = WebDriverWait(driver, 10).until(
+                EC.element_to_be_clickable((By.XPATH, deny_locator))
+            )
+            deny_element.click()  # Click the 'Deny' button
+        except:
+            pass  # Skip if "Deny" button is not present
 
         # Step 4: Enter Email Address
         # Locate the email field and wait for it to be present
@@ -137,10 +141,10 @@ def test_login(driver):
             screen_size = driver.get_window_size()
             width = screen_size['width']
             height = screen_size['height']
-            start_x = (width/4) * 3  # Starting X coordinate for swipe
-            start_y = (height/5) * 4  # Starting Y coordinate for swipe
-            end_x = width/4  # Ending X coordinate for swipe
-            end_y = (height/5) * 4  # Ending Y coordinate for swipe
+            start_x = width * 0.8  # Starting X coordinate for swipe
+            start_y = (height / 5) * 4  # Starting Y coordinate for swipe
+            end_x = width * 0.2  # Ending X coordinate for swipe
+            end_y = (height / 5) * 4  # Ending Y coordinate for swipe
 
             driver.swipe(start_x, start_y, end_x, end_y)  # Perform the swipe action
 
@@ -149,7 +153,7 @@ def test_login(driver):
         gotItButton_element = WebDriverWait(driver, 10).until(
             EC.element_to_be_clickable((By.XPATH, gotItButton_locator))
         )
-        gotItButton_element.click()  # Click the 'Got It' button again
+        gotItButton_element.click()
 
         try:
             # Step 15: Click 'OK' button again if needed
@@ -159,24 +163,9 @@ def test_login(driver):
             )
             okButton_element.click()  # Click the 'OK' button again
         except:
-            pass
-
-        # Step 16: Click 'Not Now' button if present
-        notNow_locator = resx_reader_instance.get_locator(key="notNow")
-        notNow_element = WebDriverWait(driver, 10).until(
-            EC.element_to_be_clickable((By.XPATH, notNow_locator))
-        )
-        notNow_element.click()  # Click the 'Not Now' button
-
-        # Step 17: Click 'Cancel' button again if needed
-        cancelButton_locator = resx_reader_instance.get_locator(key="cancelButton")
-        cancelButton_element = WebDriverWait(driver, 10).until(
-            EC.element_to_be_clickable((By.XPATH, cancelButton_locator))
-        )
-        cancelButton_element.click()  # Click the 'Cancel' button again
-
+            pass  # Ignore if the "OK" button is not present
         
-        # Step 18: Verify if the 'Chat' element is present, indicating successful login
+        # Step 16: Verify if the 'Chat' element is present, indicating successful login
         chat_locator = resx_reader_instance.get_locator(key="chat")
         chat_element = WebDriverWait(driver, 10).until(
             EC.element_to_be_clickable((By.XPATH, chat_locator))
@@ -185,10 +174,22 @@ def test_login(driver):
         # Assert login success if 'Chat' element is found
         if chat_element:
             assert True, "Login Successful"
+            update_log(driver.session_id, 'passed')
 
-        print("Test passed: Logged in successfully.")
+        print("Test passed: Logged in successfully.")  # Log test result
 
     except TimeoutException:
         # Handle case when an element is not found or not interactable within the timeout period
         print("Test failed: Timeout while waiting for an element.")
-        assert False, "Test failed due to timeout."
+        assert False, "Test failed due to timeout."  # Log failure
+        update_log(driver.session_id, 'Failed')
+
+    except Exception as e:
+        # Handle any other exceptions and fail the test
+        print(f"Test failed: {str(e)}")
+        assert False, f"Test failed due to: {str(e)}"  # Log failure due to other errors
+        update_log(driver.session_id, 'Failed')
+    
+
+driver=initialize_driver()
+test_login(driver)
