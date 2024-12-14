@@ -2,102 +2,91 @@ import pytest
 import sys
 import os
 from selenium.common.exceptions import TimeoutException, WebDriverException
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.common.by import By
+from dotenv import load_dotenv
 
 # Add the project root to the Python path for module imports
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 # Import the required functions and classes
 from utils.driver_setup import initialize_driver
-from utils.log_status import update_log
 from utils.resource_reader import ResxReader
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.common.by import By
-from dotenv import load_dotenv
 
-# Specify the location of the .resx resource file containing locator information
+# Load locators from the .resx resource file
 resource_location = r'C:\Users\Admin\Desktop\Automation-Projects\Mobile-App-Automation\resources\login_test_locators.resx'
-# Create an instance of the ResxReader to read locators from the resource file
 resx_reader_instance = ResxReader(resource_location)
 
-# Load environment variables from the .env file for test credentials
+# Load environment variables for test credentials
 load_dotenv(r"C:\Users\Admin\Desktop\Automation-Projects\Mobile-App-Automation\resources\.env")
-test_username = os.getenv("TEST_EMAIL")  # Get the test email from the environment variables
-test_password = os.getenv("TEST_PASS")   # Get the test password from the environment variables
+test_username = os.getenv("TEST_EMAIL")  # Email for login
+test_password = os.getenv("TEST_PASS")   # Password for login
 
 # Fixture to set up and tear down the WebDriver for the test module
 @pytest.fixture(scope="module")
 def driver():
     """Fixture to initialize the WebDriver for the test module."""
-    driver = initialize_driver()  # Initialize the driver for the test session
-    yield driver  # Provide the driver instance to the test
+    driver = initialize_driver()  # Initialize WebDriver
+    yield driver  # Provide driver instance to the test
     try:
-        if driver.session_id:  # Check if the session is still active
-            driver.quit()  # Quit the driver after test completion
+        if driver.session_id:  # Ensure the session is active before quitting
+            driver.quit()  # Quit the driver after tests
     except WebDriverException as e:
-        print(f"Error during driver teardown: {e}")  # Print error if quitting fails
+        print(f"Error during driver teardown: {e}")
 
-def test_login(driver):
-    """Test case for logging into an application with different credentials."""
+# Reusable login function for all test cases
+def login(driver, username, password):
+    """
+    Logs into the application using the provided username and password.
+
+    Args:
+        driver (WebDriver): Selenium WebDriver instance.
+        username (str): The email or username for login.
+        password (str): The password for login.
+    """
     try:
         # Step 1: Agree to Terms
-        # Locate the "Agree to Terms" element and wait for it to be clickable
         agreeTerms_locator = resx_reader_instance.get_locator(key="agreeTerms")
         agreeTerms_element = WebDriverWait(driver, 30).until(
             EC.element_to_be_clickable((By.XPATH, agreeTerms_locator))
         )
-        agreeTerms_element.click()  # Click the 'Agree to Terms' button or checkbox
+        agreeTerms_element.click()
 
         # Step 2: Click 'Get Started'
-        # Locate the "Get Started" element and wait for it to be clickable
         getStarted_locator = resx_reader_instance.get_locator(key="getStarted")
         getStarted_element = WebDriverWait(driver, 10).until(
             EC.element_to_be_clickable((By.XPATH, getStarted_locator))
         )
-        getStarted_element.click()  # Click the 'Get Started' button
+        getStarted_element.click()
 
-        # Step 3: Deny Permissions if prompted
-        # Locate the "Deny" element and wait for it to be clickable
-        try:
-            deny_locator = resx_reader_instance.get_locator(key="deny")
-            deny_element = WebDriverWait(driver, 10).until(
-                EC.element_to_be_clickable((By.XPATH, deny_locator))
-            )
-            deny_element.click()  # Click the 'Deny' button
-        except:
-            pass  # Skip if "Deny" button is not present
-
-        # Step 4: Enter Email Address
-        # Locate the email field and wait for it to be present
+        # Step 3: Enter Email Address
         emailField_locator = resx_reader_instance.get_locator(key="emailField")
         emailField_element = WebDriverWait(driver, 10).until(
             EC.presence_of_element_located((By.XPATH, emailField_locator))
         )
-        emailField_element.send_keys(test_username)  # Input the email for login
+        emailField_element.send_keys(username)
 
-        # Step 5: Click 'Next' button after entering email
-        # Locate the "Next" button and wait for it to be clickable
+        # Step 4: Click 'Next' button
         nextButton_locator = resx_reader_instance.get_locator(key="nextButton")
         nextButton_element = WebDriverWait(driver, 10).until(
             EC.element_to_be_clickable((By.XPATH, nextButton_locator))
         )
-        nextButton_element.click()  # Click the 'Next' button
+        nextButton_element.click()
 
-        # Step 6: Enter Password
-        # Locate the password field and wait for it to be present
+        # Step 5: Enter Password
         passwordField_locator = resx_reader_instance.get_locator(key="passwordField")
         passwordField_element = WebDriverWait(driver, 30).until(
             EC.presence_of_element_located((By.XPATH, passwordField_locator))
         )
-        passwordField_element.send_keys(test_password)  # Input the password for login
+        passwordField_element.send_keys(password)
 
-        # Step 7: Click 'Sign In' button
-        # Locate the "Sign In" button and wait for it to be clickable
+        # Step 6: Click 'Sign In' button
         signInButton_locator = resx_reader_instance.get_locator(key="signInButton")
         signInButton_element = WebDriverWait(driver, 10).until(
             EC.element_to_be_clickable((By.XPATH, signInButton_locator))
         )
-        signInButton_element.click()  # Click the 'Sign In' button
+        signInButton_element.click()
 
         # Step 8: Handle additional prompts (e.g., "Next" buttons)
         for i in range(2):  # Click the "Next" button twice if needed
@@ -172,24 +161,25 @@ def test_login(driver):
         )
 
         # Assert login success if 'Chat' element is found
-        if chat_element:
-            assert True, "Login Successful"
-            update_log(driver.session_id, 'passed')
-
-        print("Test passed: Logged in successfully.")  # Log test result
-
+        if chat_element.is_enabled():
+            return True
+        else:
+            return False
     except TimeoutException:
         # Handle case when an element is not found or not interactable within the timeout period
         print("Test failed: Timeout while waiting for an element.")
         assert False, "Test failed due to timeout."  # Log failure
-        update_log(driver.session_id, 'Failed')
-
     except Exception as e:
         # Handle any other exceptions and fail the test
         print(f"Test failed: {str(e)}")
         assert False, f"Test failed due to: {str(e)}"  # Log failure due to other errors
-        update_log(driver.session_id, 'Failed')
-    
 
-driver=initialize_driver()
-test_login(driver)
+# Test case using the reusable login function
+def test_login(driver):
+    """Test case to validate login functionality."""
+    is_logged_in = login(driver, test_username, test_password)
+    if is_logged_in == True:
+        driver.execute_script('browserstack_executor: {"action": "setSessionStatus", "arguments": {"status":"passed", "reason": "Results found!"}}')
+    else:
+        driver.execute_script('browserstack_executor: {"action": "setSessionStatus", "arguments": {"status":"failed", "reason": "Chat element not enabled."}}')
+        assert False, "Chat element was not enabled, test failed."

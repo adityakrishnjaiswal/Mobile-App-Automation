@@ -19,7 +19,6 @@ def get_device_info():
     # Check if any devices are connected.
     if not devices:
         print("No Physical Device is Available, Connecting to Browserstack")
-        
         return None
     
     else:
