@@ -5,7 +5,7 @@ from selenium.webdriver.remote.client_config import ClientConfig
 from appium.webdriver.appium_connection import AppiumConnection
 
 # Add the project root to the Python path
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../..')))
 
 # Import the desired capabilities function from the project's config
 from config.android.desired_caps import get_desired_capabilities

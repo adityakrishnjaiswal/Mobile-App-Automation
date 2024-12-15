@@ -18,148 +18,154 @@ from utils.resource_reader import ResxReader
 resource_location = r'C:\Users\Admin\Desktop\Automation-Projects\Mobile-App-Automation\resources\android\login_test_locators.resx'
 resx_reader_instance = ResxReader(resource_location)
 
-# Fixture to set up and tear down the WebDriver for the test module
+# Fixture to initialize and tear down the WebDriver for the test module
 @pytest.fixture(scope="module")
 def driver():
-    """Fixture to initialize the WebDriver for the test module."""
-    driver = initialize_driver()  # Initialize WebDriver
-    yield driver  # Provide driver instance to the test
+    """
+    Fixture to initialize the WebDriver for the test module.
+
+    Yields:
+        driver (WebDriver): A WebDriver instance for interacting with the mobile app.
+    """
+    driver = initialize_driver()  # Step 1: Initialize WebDriver
+    yield driver  # Step 2: Provide the WebDriver instance to the test
     try:
-        if driver.session_id:  # Ensure the session is active before quitting
-            driver.quit()  # Quit the driver after tests
+        if driver.session_id:  # Ensure the session is still active
+            driver.quit()  # Step 3: Quit the driver to release resources
     except WebDriverException as e:
+        # Handle any errors during teardown
         print(f"Error during driver teardown: {e}")
 
-
+# Fixture to handle the login process
 @pytest.fixture
 def login(driver):
-    # Load environment variables for test credentials
-    load_dotenv(r"C:\Users\Admin\Desktop\Automation-Projects\Mobile-App-Automation\resources\.env")
-    test_username = os.getenv("TEST_EMAIL")  # Email for login
-    test_password = os.getenv("TEST_PASS")   # Password for login
     """
-    Logs into the application using the provided username and password.
+    Logs into the application using credentials stored in environment variables.
 
     Args:
         driver (WebDriver): Selenium WebDriver instance.
-        username (str): The email or username for login.
-        password (str): The password for login.
+
+    Steps:
+        1. Accept terms and conditions.
+        2. Enter login credentials and proceed.
+        3. Handle any additional prompts.
     """
+    # Step 1: Load environment variables for credentials
+    load_dotenv(r"C:\Users\Admin\Desktop\Automation-Projects\Mobile-App-Automation\resources\.env")
+    test_username = os.getenv("TEST_EMAIL")  # Retrieve email from .env
+    test_password = os.getenv("TEST_PASS")   # Retrieve password from .env
+
     try:
-        # Step 1: Agree to Terms
+        # Step 2: Accept Terms and Conditions
         agreeTerms_locator = resx_reader_instance.get_locator(key="agreeTerms")
         agreeTerms_element = WebDriverWait(driver, 30).until(
             EC.element_to_be_clickable((By.XPATH, agreeTerms_locator))
         )
         agreeTerms_element.click()
 
-        # Step 2: Click 'Get Started'
+        # Step 3: Click 'Get Started' button
         getStarted_locator = resx_reader_instance.get_locator(key="getStarted")
         getStarted_element = WebDriverWait(driver, 10).until(
             EC.element_to_be_clickable((By.XPATH, getStarted_locator))
         )
         getStarted_element.click()
 
-        # Step 3: Enter Email Address
+        # Step 4: Enter email in the email field
         emailField_locator = resx_reader_instance.get_locator(key="emailField")
         emailField_element = WebDriverWait(driver, 10).until(
             EC.presence_of_element_located((By.XPATH, emailField_locator))
         )
         emailField_element.send_keys(test_username)
 
-        # Step 4: Click 'Next' button
+        # Step 5: Click 'Next' button
         nextButton_locator = resx_reader_instance.get_locator(key="nextButton")
         nextButton_element = WebDriverWait(driver, 10).until(
             EC.element_to_be_clickable((By.XPATH, nextButton_locator))
         )
         nextButton_element.click()
 
-        # Step 5: Enter Password
+        # Step 6: Enter password
         passwordField_locator = resx_reader_instance.get_locator(key="passwordField")
         passwordField_element = WebDriverWait(driver, 30).until(
             EC.presence_of_element_located((By.XPATH, passwordField_locator))
         )
         passwordField_element.send_keys(test_password)
 
-        # Step 6: Click 'Sign In' button
+        # Step 7: Click 'Sign In' button
         signInButton_locator = resx_reader_instance.get_locator(key="signInButton")
         signInButton_element = WebDriverWait(driver, 10).until(
             EC.element_to_be_clickable((By.XPATH, signInButton_locator))
         )
         signInButton_element.click()
 
-        # Step 8: Handle additional prompts (e.g., "Next" buttons)
-        for i in range(2):  # Click the "Next" button twice if needed
+        # Step 8: Handle 'Next' buttons in additional prompts
+        for i in range(2):  # Loop for handling multiple 'Next' clicks
             nextButton_locator = resx_reader_instance.get_locator(key="nextButton")
             nextButton_element = WebDriverWait(driver, 30).until(
                 EC.element_to_be_clickable((By.XPATH, nextButton_locator))
             )
-            nextButton_element.click()  # Click the 'Next' button
+            nextButton_element.click()
 
-        # Step 9: Dismiss "Got It" messages if they appear
-        for i in range(2):  # Click the "Got It" button twice if present
+        # Step 9: Handle 'Got It' buttons
+        for i in range(2):  # Loop for handling multiple 'Got It' clicks
             gotItButton_locator = resx_reader_instance.get_locator(key="gotItButton")
             gotItButton_element = WebDriverWait(driver, 30).until(
                 EC.element_to_be_clickable((By.XPATH, gotItButton_locator))
             )
-            gotItButton_element.click()  # Click the 'Got It' button
+            gotItButton_element.click()
 
-        # Step 10: Handle the 'Cancel' button if present (optional)
+        # Step 10: Handle 'Cancel' button (optional)
         cancelButton_locator = resx_reader_instance.get_locator(key="cancelButton")
         cancelButton_element = WebDriverWait(driver, 30).until(
             EC.element_to_be_clickable((By.XPATH, cancelButton_locator))
         )
-        cancelButton_element.click()  # Click the 'Cancel' button if needed
+        cancelButton_element.click()
 
         # Step 11: Click 'Get Started' button again if necessary
         getStarted_locator = resx_reader_instance.get_locator(key="getStarted")
         getStarted_element = WebDriverWait(driver, 10).until(
             EC.element_to_be_clickable((By.XPATH, getStarted_locator))
         )
-        getStarted_element.click()  # Click the 'Get Started' button again
+        getStarted_element.click()
 
-        # Step 12: Check for a viewpager element for additional navigation (if present)
+        # Step 12: Handle viewpager navigation if present
         viewpager_locator = resx_reader_instance.get_locator(key="viewpagerIndicator")
         viewpager_element = WebDriverWait(driver, 30).until(
             EC.element_to_be_clickable((By.XPATH, viewpager_locator))
         )
-
         if viewpager_element:
-            # Step 13: Swipe screen to navigate (if necessary)
-            # Get the window size and calculate coordinates for swipe action
+            # Perform swipe action to navigate through viewpager
             screen_size = driver.get_window_size()
             width = screen_size['width']
             height = screen_size['height']
-            start_x = width * 0.8  # Starting X coordinate for swipe
-            start_y = (height / 5) * 4  # Starting Y coordinate for swipe
-            end_x = width * 0.2  # Ending X coordinate for swipe
-            end_y = (height / 5) * 4  # Ending Y coordinate for swipe
+            start_x = width * 0.8
+            start_y = (height / 5) * 4
+            end_x = width * 0.2
+            end_y = (height / 5) * 4
+            driver.swipe(start_x, start_y, end_x, end_y)
 
-            driver.swipe(start_x, start_y, end_x, end_y)  # Perform the swipe action
-
-        # Step 14: Click 'Got It' button again if present
+        # Step 13: Handle 'Got It' button again
         gotItButton_locator = resx_reader_instance.get_locator(key="gotItButton")
         gotItButton_element = WebDriverWait(driver, 10).until(
             EC.element_to_be_clickable((By.XPATH, gotItButton_locator))
         )
         gotItButton_element.click()
 
+        # Step 14: Handle 'OK' button if present
         try:
-            # Step 15: Click 'OK' button again if needed
             okButton_locator = resx_reader_instance.get_locator(key="ok")
             okButton_element = WebDriverWait(driver, 10).until(
                 EC.element_to_be_clickable((By.XPATH, okButton_locator))
             )
-            okButton_element.click()  # Click the 'OK' button again
-        except:
-            pass  # Ignore if the "OK" button is not present
-        
-        
+            okButton_element.click()
+        except TimeoutException:
+            pass  # Ignore if 'OK' button is not present
+
     except TimeoutException:
-        # Handle case when an element is not found or not interactable within the timeout period
+        # Handle timeout errors
         print("Test failed: Timeout while waiting for an element.")
-        assert False, "Test failed due to timeout."  # Log failure
+        assert False, "Test failed due to timeout."
     except Exception as e:
-        # Handle any other exceptions and fail the test
+        # Handle unexpected errors
         print(f"Test failed: {str(e)}")
-        assert False, f"Test failed due to: {str(e)}"  # Log failure due to other errors
+        assert False, f"Test failed due to: {str(e)}"
