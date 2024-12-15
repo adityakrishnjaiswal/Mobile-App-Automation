@@ -8,7 +8,7 @@ from appium.webdriver.appium_connection import AppiumConnection
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 # Import the desired capabilities function from the project's config
-from config.desired_caps import get_desired_capabilities
+from config.android.desired_caps import get_desired_capabilities
 
 # Define the Appium server URL
 

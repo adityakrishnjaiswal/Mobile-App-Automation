@@ -8,20 +8,15 @@ from selenium.webdriver.common.by import By
 from dotenv import load_dotenv
 
 # Add the project root to the Python path for module imports
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../..')))
 
 # Import the required functions and classes
 from utils.driver_setup import initialize_driver
 from utils.resource_reader import ResxReader
 
 # Load locators from the .resx resource file
-resource_location = r'C:\Users\Admin\Desktop\Automation-Projects\Mobile-App-Automation\resources\login_test_locators.resx'
+resource_location = r'C:\Users\Admin\Desktop\Automation-Projects\Mobile-App-Automation\resources\android\login_test_locators.resx'
 resx_reader_instance = ResxReader(resource_location)
-
-# Load environment variables for test credentials
-load_dotenv(r"C:\Users\Admin\Desktop\Automation-Projects\Mobile-App-Automation\resources\.env")
-test_username = os.getenv("TEST_EMAIL")  # Email for login
-test_password = os.getenv("TEST_PASS")   # Password for login
 
 # Fixture to set up and tear down the WebDriver for the test module
 @pytest.fixture(scope="module")
@@ -35,8 +30,13 @@ def driver():
     except WebDriverException as e:
         print(f"Error during driver teardown: {e}")
 
-# Reusable login function for all test cases
-def login(driver, username, password):
+
+@pytest.fixture
+def login(driver):
+    # Load environment variables for test credentials
+    load_dotenv(r"C:\Users\Admin\Desktop\Automation-Projects\Mobile-App-Automation\resources\.env")
+    test_username = os.getenv("TEST_EMAIL")  # Email for login
+    test_password = os.getenv("TEST_PASS")   # Password for login
     """
     Logs into the application using the provided username and password.
 
@@ -65,7 +65,7 @@ def login(driver, username, password):
         emailField_element = WebDriverWait(driver, 10).until(
             EC.presence_of_element_located((By.XPATH, emailField_locator))
         )
-        emailField_element.send_keys(username)
+        emailField_element.send_keys(test_username)
 
         # Step 4: Click 'Next' button
         nextButton_locator = resx_reader_instance.get_locator(key="nextButton")
@@ -79,7 +79,7 @@ def login(driver, username, password):
         passwordField_element = WebDriverWait(driver, 30).until(
             EC.presence_of_element_located((By.XPATH, passwordField_locator))
         )
-        passwordField_element.send_keys(password)
+        passwordField_element.send_keys(test_password)
 
         # Step 6: Click 'Sign In' button
         signInButton_locator = resx_reader_instance.get_locator(key="signInButton")
@@ -154,17 +154,7 @@ def login(driver, username, password):
         except:
             pass  # Ignore if the "OK" button is not present
         
-        # Step 16: Verify if the 'Chat' element is present, indicating successful login
-        chat_locator = resx_reader_instance.get_locator(key="chat")
-        chat_element = WebDriverWait(driver, 10).until(
-            EC.element_to_be_clickable((By.XPATH, chat_locator))
-        )
-
-        # Assert login success if 'Chat' element is found
-        if chat_element.is_enabled():
-            return True
-        else:
-            return False
+        
     except TimeoutException:
         # Handle case when an element is not found or not interactable within the timeout period
         print("Test failed: Timeout while waiting for an element.")
@@ -173,13 +163,3 @@ def login(driver, username, password):
         # Handle any other exceptions and fail the test
         print(f"Test failed: {str(e)}")
         assert False, f"Test failed due to: {str(e)}"  # Log failure due to other errors
-
-# Test case using the reusable login function
-def test_login(driver):
-    """Test case to validate login functionality."""
-    is_logged_in = login(driver, test_username, test_password)
-    if is_logged_in == True:
-        driver.execute_script('browserstack_executor: {"action": "setSessionStatus", "arguments": {"status":"passed", "reason": "Results found!"}}')
-    else:
-        driver.execute_script('browserstack_executor: {"action": "setSessionStatus", "arguments": {"status":"failed", "reason": "Chat element not enabled."}}')
-        assert False, "Chat element was not enabled, test failed."

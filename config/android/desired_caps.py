@@ -1,4 +1,4 @@
-from config.device_info import get_device_info
+from config.android.device_info import get_device_info
 from appium.options.common.base import AppiumOptions
 import os
 from dotenv import load_dotenv
