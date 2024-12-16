@@ -1,7 +1,10 @@
 config/__pycache__/
+config/android/__pycache__/
+config/ios/__pycache__/
 utils/__pycache__/
 env/
 resources/.env
 tests/__pycache__/
 apk/
 reports/
+.pytest_cache/

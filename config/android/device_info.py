@@ -18,19 +18,14 @@ def get_device_info():
 
     # Check if any devices are connected.
     if not devices:
-        print("No Physical Device is Available, Connecting to Browserstack")
         return None
-    
-    else:
-        # Extract the device information.
-        for device in devices:
-            # Get the device serial number.
-            device_name = device.serial  
+    # Extract the device information.
+    for device in devices:
+        # Get the device serial number.
+        device_name = device.serial  
 
-            # Get the Android OS version from the device properties.
-            os_version = device.prop.get("ro.build.version.release")  
+        # Get the Android OS version from the device properties.
+        os_version = device.prop.get("ro.build.version.release")  
 
-            # Return the information as a tuple.
+        # Return the information as a tuple.
         return device_name, os_version
-
-get_device_info()
