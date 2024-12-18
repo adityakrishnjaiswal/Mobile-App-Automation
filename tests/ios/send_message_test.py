@@ -16,7 +16,7 @@ from utils.driver_setup import initialize_driver
 from utils.resource_reader import ResxReader
 
 # Load locators from the .resx resource file
-resource_location = r'C:\Users\Admin\Desktop\Automation-Projects\Mobile-App-Automation\resources\android\send_message_test.resx'
+resource_location = r'C:\Users\Admin\Desktop\Automation-Projects\Mobile-App-Automation\resources\ios\send_message_test.resx'
 resx_reader_instance = ResxReader(resource_location)
 
 # Define a list of test messages to send
