@@ -1,0 +1,16 @@
+Test Case ID	Test Scenario	Test Steps	Test Data	Expected Result	Actual Result	Status (Pass/Fail)	Comments
+TC001	Verify user login functionality with valid credentials	1. Launch the mobile application.	N/A	Application should launch successfully.			
+2. Accept Terms and Conditions.	N/A	Terms and Conditions are accepted, and the user proceeds to the next screen.			
+3. Click on the "Get Started" button.	N/A	User should navigate to the login screen.			
+4. Enter valid email address in the email field.	TEST_EMAIL (from .env file)	Email should be entered successfully.			
+5. Click on the "Next" button.	N/A	User should proceed to the password screen.			
+6. Enter valid password in the password field.	TEST_PASS (from .env file)	Password should be entered successfully.			
+7. Click on the "Sign In" button.	N/A	User should be successfully logged in.			
+8. Click "Next" on additional prompts.	N/A	Prompts should be navigated successfully.			
+9. Click "Got It" buttons on additional screens.	N/A	User should proceed through all prompt screens.			
+10. Click on "Cancel" button if displayed.	N/A	Operation should be canceled if applicable.			
+11. Click "Get Started" again if required.	N/A	User should navigate to the dashboard or main screen.			
+12. Handle viewpager navigation (if present).	Swipe action (Right to Left)	Viewpager screens should be navigated successfully.			
+13. Click on the "Got It" button if displayed again.	N/A	User should proceed without any interruptions.			
+14. Click on the "OK" button if displayed.	N/A	User should see confirmation and proceed.			
+Expected Final Outcome:	User should successfully log in and reach the main dashboard of the application.		Application dashboard/home screen is displayed.			
