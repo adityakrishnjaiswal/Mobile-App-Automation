@@ -7,34 +7,37 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 
 # Add the project root to the Python path for module imports
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../..')))
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 # Import the required functions and classes
 from utils.driver_setup import initialize_driver
 from utils.resource_reader import ResxReader
 
-# Load locators from the .resx resource file
+# Load locators from the iOS-specific .resx resource file
 resource_location = r'C:\Users\Admin\Desktop\Automation-Projects\Mobile-App-Automation\resources\ios\login_test_locators.resx'
 resx_reader_instance = ResxReader(resource_location)
 
-# Test case to validate login functionality
-def test_login(login, driver):
+# Test case to validate login functionality for iOS
+def test_login_ios(login, driver):
     """
     Test case to validate login functionality by verifying the presence of 
-    a 'Chat' element, which indicates successful login.
+    a 'Chat' element, which indicates successful login on iOS.
     """
 
-    # Step 1: Retrieve the locator for the 'Chat' element
-    chatTab_locator = resx_reader_instance.get_locator(key="chatTab")
+    # Step 1: Retrieve the locator for the 'Chat' element from the iOS resource file
+    chat_locator = resx_reader_instance.get_locator(key="chat")
     
     # Step 2: Wait until the 'Chat' element is clickable (indicating the app has loaded)
-    chatTab_element = WebDriverWait(driver, 10).until(
-        EC.element_to_be_clickable((By.XPATH, chatTab_locator))
-    )
+    try:
+        chat_element = WebDriverWait(driver, 10).until(
+            EC.element_to_be_clickable((By.XPATH, chat_locator))
+        )
+    except TimeoutException:
+        driver.execute_script('browserstack_executor: {"action": "setSessionStatus", "arguments": {"status":"failed", "reason": "Chat element not found or clickable."}}')
+        assert False  # Fail the test if the element is not found or clickable
 
     # Step 3: Assert that the 'Chat' element is enabled to confirm login success
-    if chatTab_element.is_enabled():
-        chatTab_element.click()
+    if chat_element.is_enabled():
         # Mark the test as passed in BrowserStack
         driver.execute_script('browserstack_executor: {"action": "setSessionStatus", "arguments": {"status":"passed", "reason": "Logged in Successfully!"}}')
         assert True  # Pass the test if the element is enabled
@@ -42,4 +45,3 @@ def test_login(login, driver):
         # Mark the test as failed in BrowserStack
         driver.execute_script('browserstack_executor: {"action": "setSessionStatus", "arguments": {"status":"failed", "reason": "Chat element not enabled."}}')
         assert False  # Fail the test if the element is not enabled
-
