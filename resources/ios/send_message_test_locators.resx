@@ -15,17 +15,17 @@
 
   <!-- Message Input Field -->
   <data name="messageInput" xml:space="preserve">
-    <value>//android.widget.EditText[contains(@resource-id, 'messageInput')]</value>
+    <value>//XCUIElementTypeTextView[contains(@name, 'messageInput')]</value>
   </data>
 
   <!-- Send Button -->
   <data name="sendButton" xml:space="preserve">
-    <value>//android.widget.Button[contains(@text, 'Send')]</value>
+    <value>//XCUIElementTypeButton[contains(@name, 'Send')]</value>
   </data>
 
   <!-- Sent Message Verification -->
   <data name="sentMessage" xml:space="preserve">
-    <value>//android.widget.TextView[contains(@text, 'Hello, this is a test message.')]</value>
+    <value>//XCUIElementTypeStaticText[contains(@name, 'Hello, this is a test message.')]</value>
   </data>
 
   <!-- Message Sent Status -->

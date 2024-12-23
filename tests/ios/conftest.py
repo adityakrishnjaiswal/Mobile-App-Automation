@@ -14,8 +14,8 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../..')
 from utils.driver_setup import initialize_driver
 from utils.resource_reader import ResxReader
 
-# Load locators from the iOS-specific .resx resource file
-resource_location = r'C:\Users\Admin\Desktop\Automation-Projects\Mobile-App-Automation\resources\ios\login_test_locators.resx'
+# Load locators from the .resx resource file
+resource_location = r'C:\Users\Admin\Desktop\Automation-Projects\Mobile-App-Automation\resources\android\login_test_locators.resx'
 resx_reader_instance = ResxReader(resource_location)
 
 # Fixture to initialize and tear down the WebDriver for the test module
@@ -36,11 +36,11 @@ def driver():
         # Handle any errors during teardown
         print(f"Error during driver teardown: {e}")
 
-# Fixture to handle the login process for iOS
+# Fixture to handle the login process
 @pytest.fixture
 def login(driver):
     """
-    Logs into the application using credentials stored in environment variables for iOS.
+    Logs into the application using credentials stored in environment variables.
 
     Args:
         driver (WebDriver): Selenium WebDriver instance.
@@ -134,7 +134,7 @@ def login(driver):
             EC.element_to_be_clickable((By.XPATH, viewpager_locator))
         )
         if viewpager_element:
-            # Perform swipe action to navigate through viewpager (for iOS)
+            # Perform swipe action to navigate through viewpager
             screen_size = driver.get_window_size()
             width = screen_size['width']
             height = screen_size['height']
