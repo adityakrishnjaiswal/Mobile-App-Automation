@@ -14,18 +14,22 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
 
+  <!-- Locator for the Teams tab -->
+  <data name="teams_tab" xml:space="preserve">
+    <value>//android.widget.TabWidget[contains(@text,"Teams")]</value>
+    <comment>The XPath to locate the "Teams" tab in the app.</comment>
+  </data>
+
   <!-- Locator for the Call button -->
-  <data name="call" xml:space="preserve">
+  <data name="call_button" xml:space="preserve">
     <value>//android.widget.Button[contains(@text,"Call")]</value>
     <comment>The XPath to locate the "Call" button in the app.</comment>
   </data>
 
-  <!-- Locator for the Chat button -->
-  <data name="chat" xml:space="preserve">
-    <value>//android.widget.TextView[contains(@text,"Chat")]</value>
-    <comment>The XPath to locate the "Chat" button in the app.</comment>
+  <!-- Locator for the Ongoing Call indicator -->
+  <data name="ongoing_call_indicator" xml:space="preserve">
+    <value>//android.widget.ImageView[contains(@content-desc,"Ongoing call")]</value>
+    <comment>The XPath to locate the "Ongoing Call" indicator in the app.</comment>
   </data>
 
-  <!-- You can add more locators for other elements involved in the call functionality -->
-  
 </root>
