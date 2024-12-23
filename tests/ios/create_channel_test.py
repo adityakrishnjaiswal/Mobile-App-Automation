@@ -14,7 +14,7 @@ from utils.driver_setup import initialize_driver
 from utils.resource_reader import ResxReader
 
 # Load locators from the .resx resource file
-resource_location = r'C:\Users\Admin\Desktop\Automation-Projects\Mobile-App-Automation\resources\android\create_channel_test_locators.resx'
+resource_location = r'C:\Users\Admin\Desktop\Automation-Projects\Mobile-App-Automation\resources\ios\create_channel_test_locators.resx'
 resx_reader_instance = ResxReader(resource_location)
 
 # Test case to validate creating a channel functionality

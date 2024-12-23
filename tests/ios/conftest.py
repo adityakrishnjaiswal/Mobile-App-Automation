@@ -15,7 +15,7 @@ from utils.driver_setup import initialize_driver
 from utils.resource_reader import ResxReader
 
 # Load locators from the .resx resource file
-resource_location = r'C:\Users\Admin\Desktop\Automation-Projects\Mobile-App-Automation\resources\android\login_test_locators.resx'
+resource_location = r'C:\Users\Admin\Desktop\Automation-Projects\Mobile-App-Automation\resources\ios\login_test_locators.resx'
 resx_reader_instance = ResxReader(resource_location)
 
 # Fixture to initialize and tear down the WebDriver for the test module

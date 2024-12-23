@@ -7,7 +7,7 @@ from selenium.webdriver.common.by import By
 from utils.resource_reader import ResxReader
 
 # Load locators from the .resx resource file
-resource_location = r'C:\Users\Admin\Desktop\Automation-Projects\Mobile-App-Automation\resources\android\call_in_teams_locators.resx'
+resource_location = r'C:\Users\Admin\Desktop\Automation-Projects\Mobile-App-Automation\resources\ios\call_in_teams_locators.resx'
 resx_reader_instance = ResxReader(resource_location)
 
 
